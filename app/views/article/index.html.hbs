@@ -1,0 +1,53 @@
+{{#with article}}
+  <div class="large-teaser clearfix">
+    {{#if showWidgetTitle}}
+      {{#if linkedTitle}}
+          <h2 class="section-title"><a href="{{linkedUrl}}" class="title">{{title}}&nbsp;&nbsp;<span class="red">&raquo;</span></a></h2>
+        {{else}}
+          <h2 class="section-title">{{title}}</h2>
+      {{/if}}  
+    {{/if}}
+    {{#each articleMaps}}
+      <div class="primary-topic">
+        {{#if showImage}}
+          <figure class="inline-image clearfix ">
+            <a href="{{url}}">
+              {{#with imageMap}}
+                <img data-src="{{url}}" src="{{lowResUrl}}" img-width="1-col" alt="{{alttext}}" class="{{inpageStyleClass}}" title="{{title}}" />
+                <noscript><img src="{{url}}" alt="{{alttext}}" class="{{inpageStyleClass}}" title="{{title}}"></noscript>
+              {{/with}}
+            </a>
+  					<a href="{{url}}">
+  					  <h1>{{{title}}}</h1>
+  				  </a>
+          </figure>
+        {{/if}}
+        <div class="primary-topic-content">
+          <ul class="tools">
+            {{#if topicMap}}
+              <li>
+                {{#with topicMap}}
+                  <a href="{{url}}" class="more">{{name}}</a>
+                {{/with}}
+              </li>
+            {{/if}}
+            <li class="last">
+              <time datetime="{{dateStringFortimeElement}}" data-storiestime="{{dateTimeInMs}}">{{timeAgoString}}</time>
+            </li>
+          </ul>
+          <p class="lead-text"><a href="{{url}}">{{{intro}}}</a></p>
+          {{#if relatedItemMaps}}
+            <ul class="related-text">
+              {{#each relatedItemMaps}}
+                <li>
+                  <span class="icon-arrow-right"></span>
+                  <a href="{{url}}">{{{title}}}</a>
+                </li>
+              {{/each}}
+            </ul>
+          {{/if}}
+        </div>
+      </div>
+    {{/each}}
+  </div>
+{{/with}}
