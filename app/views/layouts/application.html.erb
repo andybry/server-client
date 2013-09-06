@@ -5,10 +5,79 @@
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
-</head>
-<body>
 
-<%= yield %>
+  <!-- hack in the mirror tablet stylesheets -->
+  <link rel="stylesheet" type="text/css" href="http://s.mirror.co.uk/skins/mirror/minified-code/1821126?v=11" />
+  <link rel="stylesheet" type="text/css" href="http://s.mirror.co.uk/skins/mirror/minified-code/2140842?v=12" />
+
+  <!-- hack in styles to shrink the content container -->
+  <style type="text/css">
+    .content {
+      width: 50%;
+      margin: auto;
+    }
+  </style>
+
+</head>
+<body id="mirror">
+  <div id="mirror-page" data-role="page">
+    <div data-role="content" class="content">
+      <%= yield %>
+    </div>
+  </div>
+
+<script>
+  (function() {
+    "use strict";
+    var useJson = window.location.search.match(/useJson=true/),
+        handlebars_template,
+        current_article,
+        SCROLL_DISTANCE_PX = 1,
+        SCROLL_INTERVAL_MS = 5,
+        LOAD_ARTICLE_INTERVAL_MS = 5000;
+
+    function displayHtml(html) {
+      $('.content').append(html);
+    }
+
+    window.setInterval(function() {
+      var currentScrollTop = $(window).scrollTop();
+      $(window).scrollTop(currentScrollTop + SCROLL_DISTANCE_PX);
+    }, SCROLL_INTERVAL_MS);
+
+    window.setInterval(function() {
+      if(useJson) {
+        $.ajax({
+          url: '/article.json',
+          cache: false
+        }).then(function(article) {
+          current_article = article;
+          if(!handlebars_template) {
+            return $.ajax({
+              url: article.template_url,
+              cache: false
+            }).promise();
+          }
+        }).done(function(template_string) {
+          var html;
+          if(template_string) {
+            handlebars_template = Handlebars.compile(template_string);
+          }
+          html = handlebars_template(current_article);
+          displayHtml(html);
+        });
+      } else {
+        $.ajax({
+          url: '/article.html',
+          cache: false
+        }).done(function(html) {
+          displayHtml(html);
+        });
+      }
+    }, LOAD_ARTICLE_INTERVAL_MS);
+
+  })();
+</script>
 
 </body>
 </html>
