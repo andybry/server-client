@@ -5,5 +5,7 @@ Example of rendering the same templates on the client and the server
 Running:
 
 clone the repository
+
 bundle install
+
 rails s
